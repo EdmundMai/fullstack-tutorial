@@ -1,4 +1,4 @@
-const {Sequelize} = require('sequelize');
+const { Sequelize } = require("sequelize");
 
 module.exports.paginateResults = ({
   after: cursor,
@@ -10,7 +10,7 @@ module.exports.paginateResults = ({
   if (pageSize < 1) return [];
 
   if (!cursor) return results.slice(0, pageSize);
-  const cursorIndex = results.findIndex(item => {
+  const cursorIndex = results.findIndex((item) => {
     // if an item has a `cursor` on it, use that, otherwise try to generate one
     let itemCursor = item.cursor ? item.cursor : getCursor(item);
 
@@ -23,31 +23,23 @@ module.exports.paginateResults = ({
       ? []
       : results.slice(
           cursorIndex + 1,
-          Math.min(results.length, cursorIndex + 1 + pageSize),
+          Math.min(results.length, cursorIndex + 1 + pageSize)
         )
     : results.slice(0, pageSize);
 };
 
 module.exports.createStore = () => {
   const db = new Sequelize({
-    dialect: 'sqlite',
-    storage: './store.sqlite'
+    dialect: "sqlite",
+    storage: "./store.sqlite",
   });
 
-  const users = db.define('user', {
-    createdAt: Sequelize.DATE,
-    updatedAt: Sequelize.DATE,
-    email: Sequelize.STRING,
-    profileImage: Sequelize.STRING,
-    token: Sequelize.STRING,
+  const employee = db.define("employee", {
+    avatar_url: Sequelize.STRING,
+    first_name: Sequelize.STRING,
+    last_name: Sequelize.STRING,
+    personal_email: Sequelize.STRING,
   });
 
-  const trips = db.define('trip', {
-    createdAt: Sequelize.DATE,
-    updatedAt: Sequelize.DATE,
-    launchId: Sequelize.INTEGER,
-    userId: Sequelize.INTEGER,
-  });
-
-  return { db, users, trips };
+  return { db, employee };
 };
